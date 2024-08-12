@@ -24,7 +24,7 @@ public class DepartmentController {
     }
 
     // Build Get Department REST API
-    @GetMapping("{id}")
+    @GetMapping("/{id}")
     public ResponseEntity<DepartmentDto> getDepartmentById(@PathVariable("id") Long departmentId){
         DepartmentDto departmentDto = departmentService.getDepartmentById(departmentId);
         return ResponseEntity.ok(departmentDto);
@@ -38,15 +38,16 @@ public class DepartmentController {
     }
 
     // Build Update Department REST API
-    @PutMapping("{id}")
-    public ResponseEntity<DepartmentDto> updateDepartment(@PathVariable("id") Long departmentId,
-                                                          @RequestBody DepartmentDto updatedDepartment){
+    @PatchMapping("/{id}")
+    public ResponseEntity<DepartmentDto> updateDepartment(
+            @PathVariable("id") Long departmentId,
+            @RequestBody DepartmentDto updatedDepartment){
         DepartmentDto departmentDto = departmentService.updateDepartment(departmentId, updatedDepartment);
         return ResponseEntity.ok(departmentDto);
     }
 
     // Build Delete Department REST API
-    @DeleteMapping("{id}")
+    @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteDepartment(@PathVariable("id") Long departmentId){
         departmentService.deleteDepartment(departmentId);
         return ResponseEntity.ok("Department deleted successfully!.");

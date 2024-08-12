@@ -3,12 +3,10 @@ package com.restapi.emp.service.impl;
 import com.restapi.emp.dto.DepartmentDto;
 import com.restapi.emp.dto.mapper.DepartmentMapper;
 import com.restapi.emp.entity.Department;
-import com.restapi.emp.exception.ResourceNotFoundException;
 import com.restapi.emp.repository.DepartmentRepository;
 import com.restapi.emp.service.DepartmentService;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -31,11 +29,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Transactional(readOnly = true)
     @Override
     public DepartmentDto getDepartmentById(Long departmentId) {
-        String errMsg = String.format("Department is not exists with a given id: %s" ,departmentId);
-        Department department = departmentRepository.findById(departmentId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(errMsg, HttpStatus.NOT_FOUND)
-        );
+        Department department = EmpDeptCommon.getDepartment(departmentId, departmentRepository);
         return DepartmentMapper.mapToDepartmentDto(department);
     }
 
@@ -52,14 +46,12 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public DepartmentDto updateDepartment(Long departmentId, DepartmentDto updatedDepartment) {
-        String errMsg = String.format("Department is not exists with a given id: %s" ,departmentId);
-        Department department = departmentRepository.findById(departmentId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException(errMsg, HttpStatus.NOT_FOUND)
-        );
+        Department department = EmpDeptCommon.getDepartment(departmentId, departmentRepository);
         //Dirty Check - setter Method call
-        department.setDepartmentName(updatedDepartment.getDepartmentName());
-        department.setDepartmentDescription(updatedDepartment.getDepartmentDescription());
+        if (updatedDepartment.getDepartmentName() != null)
+            department.setDepartmentName(updatedDepartment.getDepartmentName());
+        if (updatedDepartment.getDepartmentDescription() != null)
+            department.setDepartmentDescription(updatedDepartment.getDepartmentDescription());
 
         // Department savedDepartment = departmentRepository.save(department);
 
@@ -68,11 +60,8 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     @Override
     public void deleteDepartment(Long departmentId) {
-        departmentRepository.findById(departmentId)
-                .orElseThrow(() ->
-                        new ResourceNotFoundException("Department is not exists with a given id: " + departmentId)
-        );
+       Department department = EmpDeptCommon.getDepartment(departmentId,departmentRepository);
 
-        departmentRepository.deleteById(departmentId);
+        departmentRepository.delete(department);
     }
 }
