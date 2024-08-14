@@ -20,7 +20,10 @@ public class EmployeeController {
 
     // Build Add Employee REST API
     @PostMapping
-    public ResponseEntity<EmployeeDto> createEmployee(@RequestBody @Valid EmployeeDto employeeDto, Errors errors){
+    public ResponseEntity<?> createEmployee(@RequestBody @Valid EmployeeDto employeeDto){
+//        if (errors.hasErrors()) {
+//            return  ResponseEntity.badRequest().body(errors);
+//        }
         EmployeeDto savedEmployee = employeeService.createEmployee(employeeDto);
         return new ResponseEntity<>(savedEmployee, HttpStatus.CREATED);
     }

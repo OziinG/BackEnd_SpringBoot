@@ -14,12 +14,17 @@ import org.springframework.stereotype.Component;
 import java.util.List;
 
 @Component
-@Profile("prod")
+@Profile("local")  //InsertRunner 가 동작하지 않도록 하려면 현재 Profile과 다른 값을 주면 됨
 @RequiredArgsConstructor
 public class EmpDepInsertRunner implements ApplicationRunner {
-
     final DepartmentRepository departmentRepository;
     final EmployeeRepository employeeRepository;
+
+    //Constructor Injection ( 생성자 주입 )
+//    public EmpDepInsertRunner(DepartmentRepository departmentRepository, EmployeeRepository employeeRepository) {
+//        this.departmentRepository = departmentRepository;
+//        this.employeeRepository = employeeRepository;
+//    }
 
     @Override
     public void run(ApplicationArguments args) throws Exception {
